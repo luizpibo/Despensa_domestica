@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1083127165188",
+    "project_id": "despensa-domestica-41a7d",
+    "storage_bucket": "despensa-domestica-41a7d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1083127165188:android:1f0f70c2c64d05f45e6051",
+        "android_client_info": {
+          "package_name": "com.despensa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1083127165188-3q0v55re72m0i9qd3c4c1o2bdf8nmj4l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAO-zRWixDTzkre4x6vSZ3omMHxkZjlRoQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1083127165188-3q0v55re72m0i9qd3c4c1o2bdf8nmj4l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
