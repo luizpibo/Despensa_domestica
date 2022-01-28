@@ -1,12 +1,17 @@
 import React, { createContext, useState, useEffect } from "react";
 import { AuthContextProps } from "../../Types";
-import auth from "@react-native-firebase/auth";
 import { Alert } from "react-native";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import { auth } from "../../services/firebase";
 
 const AuthContext = createContext<AuthContextProps | null>(null);
 
 const AuthProvider: React.FC = ({ children }) => {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null || {});
   const [signed, setSigned] = useState(false);
 
   const onAuthStateChanged = (user: any): void => {
@@ -19,8 +24,7 @@ const AuthProvider: React.FC = ({ children }) => {
     setLoading: React.DispatchWithoutAction
   ): void => {
     setLoading();
-    auth()
-      .signInWithEmailAndPassword(email, password)
+    signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         if (userCredential) {
           console.log("Usuário logado com sucesso");
@@ -35,8 +39,11 @@ const AuthProvider: React.FC = ({ children }) => {
       .finally(() => setLoading());
   };
 
-  const signOut = (): void => {
-    auth().signOut();
+  const logout = (): void => {
+    signOut(auth).then(() => {
+      Alert.alert("Logout efetuado com sucesso");
+      onAuthStateChanged(null);
+    });
   };
 
   const registerUserWhithEmailAndPassword = (
@@ -44,8 +51,7 @@ const AuthProvider: React.FC = ({ children }) => {
     name: string,
     password: string
   ) => {
-    auth()
-      .createUserWithEmailAndPassword(email, password)
+    createUserWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         console.log(userCredentials);
       })
@@ -54,14 +60,11 @@ const AuthProvider: React.FC = ({ children }) => {
         Alert.alert("Erro ao cadastrar usuário");
       });
   };
-  useEffect(() => {
-    const currentUser = auth().currentUser;
-    console.log(currentUser);
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <AuthContext.Provider
-      value={{ signed, signIn, signOut, registerUserWhithEmailAndPassword }}
+      value={{ signed, signIn, logout, registerUserWhithEmailAndPassword }}
     >
       {children}
     </AuthContext.Provider>

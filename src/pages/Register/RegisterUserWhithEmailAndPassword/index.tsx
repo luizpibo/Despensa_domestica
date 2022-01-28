@@ -1,31 +1,28 @@
-import React, { useRef, useContext, useReducer, memo } from "react";
+import React, { useRef, useContext, useReducer } from "react";
 import validator from "validator";
+import { FormHandles } from "@unform/core";
 
 import { AuthContext, AuthContextProps } from "../../../common/contexts/auth";
+
 import { Form } from "@unform/mobile";
 import FormInput from "../../../components/Forms/FormInput";
 
 import Button from "../../../components/Button";
 import DefaultContainer from "../../../components/DefaultContainer";
-import { HandleRegisterUserWhithEmailAndPasswordProps } from "../../../Types";
-import { FormHandles } from "@unform/core";
-import auth from "@react-native-firebase/auth";
-import { Alert } from "react-native";
 
-interface errorProps {
-  email: string | undefined;
-  name: string | undefined;
-  password: string | undefined;
-  passwordConfirmation: string | undefined;
-}
+import { HandleRegisterUserWhithEmailAndPasswordProps } from "../../../Types";
+
 const RegisterWhitEmailAndPassword: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+
   const { registerUserWhithEmailAndPassword } = useContext(
     AuthContext
   ) as AuthContextProps;
+
   const [loading, setLoading] = useReducer((value: boolean) => {
     return !value;
   }, false);
+
   //Validando dados do formulaio
   const handleFormSubmit = ({
     email,
@@ -33,33 +30,42 @@ const RegisterWhitEmailAndPassword: React.FC = () => {
     password,
     passwordConfirmation,
   }: HandleRegisterUserWhithEmailAndPasswordProps) => {
-    let errorsMenssges: errorProps;
-    errorsMenssges = {
-      email: email && validator.isEmail(email) ? undefined : "Email inválido",
-      name:
-        name && validator.isAlpha(name) && !validator.isEmpty(name)
-          ? undefined
-          : "Nome inválido",
-      password:
-        password && validator.isStrongPassword(password)
-          ? undefined
-          : "Senha fraca",
-      passwordConfirmation:
-        passwordConfirmation && validator.equals(password, passwordConfirmation)
-          ? undefined
-          : "Senhas não conferem",
-    };
-    //Caso tenha algum erro, setar erros
-    if (
-      errorsMenssges.email ||
-      errorsMenssges.password ||
-      errorsMenssges.name ||
-      errorsMenssges.passwordConfirmation
-    ) {
-      formRef.current?.setErrors(errorsMenssges);
-    } else {
-      formRef.current?.setErrors({});
-      registerUserWhithEmailAndPassword(email, password, name, setLoading);
+    if (formRef.current) {
+      var errors: Record<string, string> | null = null;
+      !validator.isEmail(email) && (errors = { email: "Email inválido" });
+
+      !validator.isLength(name, { min: 3 }) &&
+        (errors
+          ? (errors = { ...errors, name: "Nome inválido" })
+          : (errors = { name: "Nome inválido" }));
+
+      !validator.isLength(password, { min: 6 }) &&
+        (errors
+          ? (errors = { ...errors, password: "Senha inválida" })
+          : (errors = { password: "Senha inválida" }));
+
+      !validator.isStrongPassword(password) &&
+        (errors
+          ? (errors = { ...errors, password: "Senha inválida" })
+          : (errors = { password: "Senha inválida" }));
+
+      !validator.equals(password, passwordConfirmation) &&
+        (errors
+          ? (errors = {
+              ...errors,
+              passwordConfirmation: "Senhas não conferem",
+            })
+          : (errors = { passwordConfirmation: "Senhas não conferem" }));
+
+      //Caso tenha algum erro, setar erros
+      if (errors) {
+        console.log(errors);
+        formRef.current.setErrors(errors);
+        return;
+      } else {
+        registerUserWhithEmailAndPassword(email, password, name, setLoading);
+      }
+      formRef.current.setErrors({});
     }
   };
 
@@ -92,6 +98,7 @@ const RegisterWhitEmailAndPassword: React.FC = () => {
         />
 
         <Button
+          disabled={loading}
           title="Registrar"
           onPress={() => formRef.current?.submitForm()}
         />
@@ -100,4 +107,4 @@ const RegisterWhitEmailAndPassword: React.FC = () => {
   );
 };
 
-export default memo(RegisterWhitEmailAndPassword);
+export default RegisterWhitEmailAndPassword;

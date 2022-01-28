@@ -5,10 +5,10 @@ import Button from "../../components/Button";
 import { AuthContext, AuthContextProps } from "../../common/contexts/auth";
 
 const DashBoard: React.FC = () => {
-  const { signOut } = useContext(AuthContext) as AuthContextProps;
+  const { logout } = useContext(AuthContext) as AuthContextProps;
 
   function handleSingOut() {
-    signOut();
+    logout();
   }
 
   return (

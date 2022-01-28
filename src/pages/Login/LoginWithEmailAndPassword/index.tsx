@@ -8,8 +8,6 @@ import FormInput from "../../../components/Forms/FormInput";
 import Button from "../../../components/Button";
 import DefaultContainer from "../../../components/DefaultContainer";
 import { LoginWithEmailAndPasswordProps } from "../../../Types";
-import { Alert } from "react-native";
-import Auth from "@react-native-firebase/auth";
 
 const LoginWithEmailAndPassword: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
@@ -35,13 +33,7 @@ const LoginWithEmailAndPassword: React.FC = () => {
       formRef.current?.setErrors(errosMenssages);
     } else {
       formRef.current?.setErrors({});
-      // signIn(email, password, setLoading);
-      Auth()
-        .signInWithEmailAndPassword(email, password)
-        .then((data) => {
-          console.log(data);
-        })
-        .catch((error) => console.log("deu erro"));
+      signIn(email, password, setLoading);
     }
   };
 

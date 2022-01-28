@@ -16,7 +16,7 @@ type AuthContextProps = {
     password: string,
     setLoading: React.DispatchWithoutAction
   ) => void;
-  signOut: () => void;
+  logout: () => void;
   registerUserWhithEmailAndPassword: (
     email: string,
     password: string,

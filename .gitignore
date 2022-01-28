@@ -56,7 +56,7 @@ dist/
 
 #Firebase SDK
 keys.js
-/src/services/API/config/keys.js
+/src/services/firebaseKey.js
 
 /.env
 
